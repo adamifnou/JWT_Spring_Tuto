@@ -44,4 +44,5 @@ public class SecretKeyGenerator {
     }
 }
 ```
+run the code above to generate a secret key and add it to the .env file
 
