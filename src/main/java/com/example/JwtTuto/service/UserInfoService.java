@@ -36,5 +36,13 @@ public class UserInfoService implements UserDetailsService {
         repository.save(userInfo);
         return "User Added Successfully";
     }
+
+    public void deleteUser(int id) {
+        // check if user exists
+        if (!repository.existsById(id)) {
+            throw new IllegalArgumentException("User not found");
+        }
+        repository.deleteById(id);
+    }
 }
 

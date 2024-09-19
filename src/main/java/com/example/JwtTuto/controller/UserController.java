@@ -36,6 +36,15 @@ public class UserController {
         return service.addUser(userInfo);
     }
 
+    @DeleteMapping("/deleteUser")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+    public String deleteUser(
+            @RequestParam(name = "id") int id
+    ){
+        service.deleteUser(id);
+        return "User Deleted Successfully";
+    }
+
     @GetMapping("/user/userProfile")
     @PreAuthorize("hasAuthority('ROLE_USER')")
     public String userProfile() {
