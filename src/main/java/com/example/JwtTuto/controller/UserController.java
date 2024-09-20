@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @DeleteMapping("/deleteUser")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String deleteUser(
             @RequestParam(name = "id") int id
     ){
@@ -64,10 +64,8 @@ public class UserController {
         );
 
         if (authentication.isAuthenticated()) {
-            System.out.println("is authenticated");
             return jwtService.generateToken(authRequest.getEmail());
         } else {
-            System.out.println("is not authenticated");
             throw new UsernameNotFoundException("Invalid user request!");
         }
     }
