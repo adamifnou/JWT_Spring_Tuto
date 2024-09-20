@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,11 +31,40 @@ public class UserInfoService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
     }
 
-    public String addUser(UserInfo userInfo) {
+    public void addUser(UserInfo userInfo) {
+        // check if user already exists by email
+        if (existsByEmail(userInfo.getEmail())) {
+            throw new IllegalArgumentException("User already exists");
+        }
         // Encode password before saving the user
         userInfo.setPassword(encoder.encode(userInfo.getPassword()));
         repository.save(userInfo);
-        return "User Added Successfully";
+    }
+    public void updateUser(UserInfo userInfo) {
+        //check if user exists
+        if (!existsById(userInfo.getId())) {
+            throw new IllegalArgumentException("User not found");
+        }else{
+            // check if email is already used by another user except the current user
+            if (existsByEmail(userInfo.getEmail()) && !(repository.findByEmail(userInfo.getEmail()).get().getId() == userInfo.getId())) {
+                throw new IllegalArgumentException("Email already used by another user");
+            }
+        }
+
+
+        // Encode password before saving the user
+        userInfo.setPassword(encoder.encode(userInfo.getPassword()));
+        repository.save(userInfo);
+    }
+    public Boolean existsByEmail(String email) {
+        return repository.existsByEmail(email);
+    }
+    public Boolean existsById(int id) {
+        return repository.existsById(id);
+    }
+    public boolean hasAdmin() {
+        List<UserInfo> admins = repository.findByRolesContaining("ROLE_ADMIN");
+        return !admins.isEmpty();
     }
 
     public void deleteUser(int id) {
