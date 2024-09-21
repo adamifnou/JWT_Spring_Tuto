@@ -76,4 +76,74 @@ public class MaterialServiceImpl implements MaterialService{
             throw new RuntimeException("Error fetching materials");
         }
     }
+
+    @Override
+    public int getMaterialQuantity(int id) {
+        Material material = getMaterialById(id);
+        if (material != null){
+            return material.getQuantity();
+        }else{
+            throw new RuntimeException("Material not found");
+        }
+    }
+
+    @Override
+    public void updateMaterialQuantity(int id, int quantity) {
+        Material material = getMaterialById(id);
+        if (material != null){
+            // check if quantity is not negative
+            if (quantity < 0){
+                throw new RuntimeException("Quantity cannot be negative");
+            }
+            int delta = quantity - material.getQuantity();
+            Compartment compartment = material.getCompartment();
+            if (compartment != null){
+                material.setQuantity(quantity);
+                materialRepository.save(material);
+
+            }else{
+                throw new RuntimeException("Compartment not found");
+            }
+        }else{
+            throw new RuntimeException("Material not found");
+        }
+    }
+
+    @Override
+    public void addMaterialQuantity(int id, int quantity) {
+        Material material = getMaterialById(id);
+        if (material != null){
+
+            // add quantity to its compartment
+            Compartment compartment = material.getCompartment();
+            if (compartment != null) {
+                compartmentService.addCompartmentCurrentLoad(compartment.getId(), quantity);
+                updateMaterialQuantity(id, material.getQuantity() + quantity);
+            }else{
+                throw new RuntimeException("Compartment not found");
+            }
+        }else{
+            throw new RuntimeException("Material not found");
+        }
+    }
+
+    @Override
+    public void removeMaterialQuantity(int id, int quantity) {
+        Material material = getMaterialById(id);
+        if (material != null){
+            if(material.getQuantity() - quantity < 0){
+                throw new RuntimeException("Trying to remove more than available quantity");
+            }
+            Compartment compartment = material.getCompartment();
+            if (compartment != null) {
+                compartmentService.removeCompartmentCurrentLoad(compartment.getId(), quantity);
+                updateMaterialQuantity(id, material.getQuantity() - quantity);
+            }else{
+                throw new RuntimeException("Compartment not found");
+            }
+        }else{
+            throw new RuntimeException("Material not found");
+        }
+    }
+
 }

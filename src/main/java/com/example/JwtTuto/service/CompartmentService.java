@@ -13,4 +13,9 @@ public interface CompartmentService {
     List<Compartment> getAllCompartments();
     List<Compartment> getAvailableCompartments();
     Compartment getCompartmentById(int id);
+
+    void updateCompartmentCurrentLoad(int id, int load);
+    void addCompartmentCurrentLoad(int id, int load);
+    void removeCompartmentCurrentLoad(int id, int load);
+    int getCompartmentCurrentLoad(int id);
 }

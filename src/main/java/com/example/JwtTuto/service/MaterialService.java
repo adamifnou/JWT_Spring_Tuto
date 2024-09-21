@@ -11,4 +11,9 @@ public interface MaterialService {
     void deleteMaterial(int id);
     Material getMaterialById(int id);
     List<Material> getAllMaterials();
+
+    int getMaterialQuantity(int id);
+    void updateMaterialQuantity(int id, int quantity);
+    void addMaterialQuantity(int id, int quantity);
+    void removeMaterialQuantity(int id, int quantity);
 }

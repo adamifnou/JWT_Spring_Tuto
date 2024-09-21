@@ -39,9 +39,9 @@ public class CompartmentServiceImpl implements CompartmentService{
             compartment.setCompartmentCode(compartmentToUpdate.getCompartmentCode());
             compartment.setCompartimentType(compartmentToUpdate.getCompartimentType());
             compartment.setDescription(compartmentToUpdate.getDescription());
-            compartment.setIsAvailable(true); // TODO: create availability service and use it here
+            compartment.setIsAvailable(compartment.getIsAvailable()); // TODO: create availability service and use it here
             compartment.setCapacity(compartmentToUpdate.getCapacity());
-            compartment.setCurrentLoad(0);// TODO: create compartimentLoadService and use it here: compartimentLoadService.getCurrentLoad(compartmentId)
+            compartment.setCurrentLoad(compartment.getCurrentLoad());// TODO: create compartimentLoadService and use it here: compartimentLoadService.getCurrentLoad(compartmentId)
         }else{
             throw new RuntimeException("Compartment not found");
         }
@@ -80,5 +80,80 @@ public class CompartmentServiceImpl implements CompartmentService{
         return compartmentRepository.findById(id).orElse(null);
     }
 
+    @Override
+    public void updateCompartmentCurrentLoad(int id, int load) {
+    Compartment compartment = getCompartmentById(id);
+        if (compartment != null) {
+            if (load < 0) {
+                throw new RuntimeException("Value of added material cannot be negative");
+            }
+            if (load > compartment.getCapacity()) {
+                throw new RuntimeException("Load cannot be more than the capacity");
+            }
+            compartment.setCurrentLoad(load);
+            compartmentRepository.save(compartment);
+        }else{
+            throw new RuntimeException("Compartment not found");
+        }
+    }
+
+    @Override
+    public void addCompartmentCurrentLoad(int id, int load) {
+        // this function will add load to the current load of a compartment
+        // get the compartment
+        Compartment compartment = getCompartmentById(id);
+        // check if compartment exists
+        if (compartment != null) {
+            // check if the load is not negative
+            if (load < 0) {
+                throw new RuntimeException("Value of added material cannot be negative");
+            }
+            // check if the load is not more than the capacity
+            if (compartment.getCurrentLoad() + load > compartment.getCapacity()) {
+                throw new RuntimeException("Load cannot be more than the capacity");
+            }
+            // update the current load
+            compartment.setCurrentLoad(compartment.getCurrentLoad() + load);
+            compartmentRepository.save(compartment);
+        }else{
+            throw new RuntimeException("Compartment not found");
+        }
+    }
+
+    @Override
+    public void removeCompartmentCurrentLoad(int id, int load) {
+        // this function will remove load from the current load of a compartment
+        // get the compartment
+        Compartment compartment = getCompartmentById(id);
+        // check if compartment exists
+        if (compartment != null) {
+            // check if the load is not negative
+            if (load < 0) {
+                throw new RuntimeException("Value of removed material cannot be negative");
+            }
+            // check if the load is not more than the current load
+            if (compartment.getCurrentLoad() - load < 0) {
+                throw new RuntimeException("Trying to remove more than available load");
+            }
+            // update the current load
+            compartment.setCurrentLoad(compartment.getCurrentLoad() - load);
+            compartmentRepository.save(compartment);
+        }else{
+            throw new RuntimeException("Compartment not found");
+        }
+    }
+
+    @Override
+    public int getCompartmentCurrentLoad(int id) {
+        // this function will return the current load of a compartment
+        // get the compartment
+        Compartment compartment = getCompartmentById(id);
+        // check if compartment exists
+        if (compartment != null) {
+            return compartment.getCurrentLoad();
+        }else{
+            throw new RuntimeException("Compartment not found");
+        }
+    }
 
 }
