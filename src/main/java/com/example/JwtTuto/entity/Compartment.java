@@ -21,6 +21,7 @@ public class Compartment {
     private String description;
     private Boolean isAvailable;
     private int capacity;
+    private int currentLoad;
 
     @OneToMany(mappedBy = "compartment")
     @JsonBackReference
