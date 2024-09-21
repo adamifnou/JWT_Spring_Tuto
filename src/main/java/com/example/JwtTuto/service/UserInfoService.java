@@ -74,5 +74,9 @@ public class UserInfoService implements UserDetailsService {
         }
         repository.deleteById(id);
     }
+    //getUserByEmail
+    public UserInfo getUserByEmail(String email) {
+        return repository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
 }
 

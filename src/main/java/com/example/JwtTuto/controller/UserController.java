@@ -1,5 +1,6 @@
 package com.example.JwtTuto.controller;
 
+import com.example.JwtTuto.dto.AuthResponseDTO;
 import com.example.JwtTuto.dto.UserRegisterDTO;
 import com.example.JwtTuto.entity.AuthRequest;
 import com.example.JwtTuto.entity.UserInfo;
@@ -128,15 +129,22 @@ public class UserController {
      * @return The generated JWT token.
      */
     @PostMapping("/generateToken")
-    public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<Object> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
+        try{
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
         );
 
         if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(authRequest.getEmail());
+            // return a json with jwt token and user id and name
+            // find user by email
+            UserInfo user = service.getUserByEmail(authRequest.getEmail());
+            return ResponseEntity.ok(new AuthResponseDTO(jwtService.generateToken(authRequest.getEmail()), user.getId(), user.getName(), user.getEmail()));
         } else {
             throw new UsernameNotFoundException("Invalid user request!");
+        }
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }
