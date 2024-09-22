@@ -14,6 +14,6 @@ public interface MaterialService {
 
     int getMaterialQuantity(int id);
     void updateMaterialQuantity(int id, int quantity);
-    void addMaterialQuantity(int id, int quantity);
-    void removeMaterialQuantity(int id, int quantity);
+    void addMaterialQuantity(int id, int quantity, int executorId);
+    void removeMaterialQuantity(int id, int quantity, int executorId);
 }

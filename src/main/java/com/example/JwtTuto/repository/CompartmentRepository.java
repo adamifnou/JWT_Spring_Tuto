@@ -10,4 +10,5 @@ public interface CompartmentRepository extends JpaRepository<Compartment, Intege
     Optional<Compartment> findById(int id);
     List<Compartment> findAllByIsAvailableTrue();
     void deleteById(int id);
+    Optional<Compartment> findByName(String name);
 }

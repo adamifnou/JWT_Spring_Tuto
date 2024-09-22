@@ -31,6 +31,10 @@ public class UserInfoService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
     }
 
+    public UserInfo getUserById(int id) {
+        return repository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
+
     public void addUser(UserInfo userInfo) {
         // check if user already exists by email
         if (existsByEmail(userInfo.getEmail())) {

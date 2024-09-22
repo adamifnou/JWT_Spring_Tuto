@@ -7,6 +7,5 @@ public class MaterialDTO {
     private String name;
     private String code;
     private String description;
-    private String unitOfMeasure;
     private int quantity;
 }

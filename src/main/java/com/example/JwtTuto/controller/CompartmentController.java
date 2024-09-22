@@ -2,9 +2,8 @@ package com.example.JwtTuto.controller;
 
 import com.example.JwtTuto.dto.CompartmentDTO;
 import com.example.JwtTuto.service.CompartmentService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -13,12 +12,13 @@ import org.springframework.web.bind.annotation.*;
  * This controller is available at the endpoint "/adminAPI/compartment", only accessible by users with the role "ROLE_ADMIN".
  */
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/adminAPI/compartment")
 public class CompartmentController
 {
-    @Autowired
-    private CompartmentService compartmentService;
+
+    private final CompartmentService compartmentService;
 
     @GetMapping("/all")
     ResponseEntity<Object> getAllCompartments()
@@ -40,7 +40,7 @@ public class CompartmentController
         }
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     ResponseEntity<Object> updateCompartment(@RequestBody CompartmentDTO compartmentDTO,
                                              @RequestParam int id)
     {

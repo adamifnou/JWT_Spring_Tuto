@@ -14,9 +14,6 @@ public class Material {
     private String name;
     private String code;
     private String description;
-    // Varchar(10) is a good choice for unit of measure
-    @Column(name = "unit_of_measure", length = 20)
-    private String unitOfMeasure;
     private int quantity;
 
     @ManyToOne

@@ -3,32 +3,38 @@ package com.example.JwtTuto.service;
 import com.example.JwtTuto.dto.CompartmentDTO;
 import com.example.JwtTuto.entity.Compartment;
 import com.example.JwtTuto.repository.CompartmentRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@AllArgsConstructor
 @Service
 public class CompartmentServiceImpl implements CompartmentService{
 
     private final CompartmentRepository compartmentRepository;
 
-    public CompartmentServiceImpl(CompartmentRepository compartmentRepository){
-        this.compartmentRepository = compartmentRepository;
-    }
-
     @Override
-    public Compartment createCompartment(CompartmentDTO compartmentToAdd){
-        Compartment compartment = new Compartment();
-        if (compartmentToAdd != null){
-            compartment.setName(compartmentToAdd.getName());
-            compartment.setCompartmentCode(compartmentToAdd.getCompartmentCode());
-            compartment.setCompartimentType(compartmentToAdd.getCompartimentType());
-            compartment.setDescription(compartmentToAdd.getDescription());
-            compartment.setIsAvailable(true);
-            compartment.setCapacity(compartmentToAdd.getCapacity());
-            compartment.setCurrentLoad(0);
+    public Compartment createCompartment(CompartmentDTO compartmentToAdd) {
+        try {
+            Compartment compartment = new Compartment();
+            if (compartmentToAdd != null) {
+                // check if there is a compartment with the same name
+                if (compartmentRepository.findByName(compartmentToAdd.getName()).isPresent()) {
+                    throw new RuntimeException("Compartment with the same name already exists");
+                }
+                compartment.setName(compartmentToAdd.getName());
+                compartment.setCompartmentCode(compartmentToAdd.getCompartmentCode());
+                compartment.setCompartimentType(compartmentToAdd.getCompartimentType());
+                compartment.setDescription(compartmentToAdd.getDescription());
+                compartment.setIsAvailable(true);
+                compartment.setCapacity(compartmentToAdd.getCapacity());
+                compartment.setCurrentLoad(0);
+            }
+            return compartmentRepository.save(compartment);
+        } catch (Exception e) {
+            throw new RuntimeException("Error creating compartment: " + e.getMessage());
         }
-        return compartmentRepository.save(compartment);
     }
 
     @Override
