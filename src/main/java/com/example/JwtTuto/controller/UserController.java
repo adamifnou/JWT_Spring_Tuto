@@ -1,12 +1,14 @@
 package com.example.JwtTuto.controller;
 
 import com.example.JwtTuto.dto.AuthResponseDTO;
+import com.example.JwtTuto.dto.RegisterResponseDTO;
 import com.example.JwtTuto.dto.UserRegisterDTO;
 import com.example.JwtTuto.entity.AuthRequest;
 import com.example.JwtTuto.entity.UserInfo;
 import com.example.JwtTuto.service.JwtService;
 import com.example.JwtTuto.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +16,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 /**
  * REST controller for handling user authentication and management.
@@ -37,7 +41,7 @@ public class UserController {
      * @param userRegisterDto Data transfer object containing user registration details.
      * @return ResponseEntity with the result of the operation.
      */
-    @PostMapping("/addNewUser")
+    @PostMapping(value = "/addNewUser", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Object> addNewUser(@RequestBody UserRegisterDTO userRegisterDto) {
         try {
             UserInfo userInfo = new UserInfo();
@@ -46,9 +50,10 @@ public class UserController {
             userInfo.setPassword(userRegisterDto.getPassword());
             userInfo.setRoles("ROLE_USER");
             service.addUser(userInfo);
-            return ResponseEntity.ok("User " + userInfo.getName() + " With " + (userInfo.getRoles().contains("ROLE_ADMIN") ? "Admin" : "Employee") + " Role Added Successfully");
+            // return a json with message and code 200
+            return ResponseEntity.ok(new RegisterResponseDTO("User " + userInfo.getName() + " Added Successfully"));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new RegisterResponseDTO(e.getMessage()));
         }
     }
 
@@ -73,9 +78,9 @@ public class UserController {
                 }
             }
             service.addUser(userInfo);
-            return ResponseEntity.ok("Admin " + userInfo.getName() + " Added Successfully");
+            return ResponseEntity.ok(new RegisterResponseDTO("Admin " + userInfo.getName() + " Added Successfully"));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new RegisterResponseDTO(e.getMessage()));
         }
     }
 
