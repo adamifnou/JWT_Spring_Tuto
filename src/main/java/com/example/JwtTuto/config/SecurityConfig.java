@@ -39,7 +39,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for stateless APIs
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/welcome", "/auth/addNewUser", "/auth/generateToken","/auth/addNewAdmin").permitAll()
+                        .requestMatchers("/auth/welcome", "/auth/addNewUser", "/auth/login","/auth/addNewAdmin").permitAll()
                         .requestMatchers("/auth/user/**","/userAPI/**").hasAuthority("ROLE_USER")
                         .requestMatchers("/auth/admin/**","/adminAPI/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated() // Protect all other endpoints

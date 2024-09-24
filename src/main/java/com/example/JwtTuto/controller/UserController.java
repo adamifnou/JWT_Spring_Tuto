@@ -133,7 +133,7 @@ public class UserController {
      * @param authRequest Data transfer object containing authentication details.
      * @return The generated JWT token.
      */
-    @PostMapping("/generateToken")
+    @PostMapping("/login")
     public ResponseEntity<Object> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
         try{
         Authentication authentication = authenticationManager.authenticate(
