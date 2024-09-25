@@ -49,6 +49,8 @@ public class MaterialServiceImpl implements MaterialService{
                     material.setName(materialToAdd.getName());
                     material.setQuantity(materialToAdd.getQuantity());
                     material.setCompartment(compartment);
+                    material.setCode(materialToAdd.getCode());
+                    material.setDescription(materialToAdd.getDescription());
                     return materialRepository.save(material);
                 } catch (Exception e){
                     try {
@@ -90,6 +92,8 @@ public class MaterialServiceImpl implements MaterialService{
                         material.setName(materialToUpdate.getName());
                         material.setQuantity(materialToUpdate.getQuantity());
                         material.setCompartment(compartment);
+                        material.setCode(materialToUpdate.getCode());
+                        material.setDescription(materialToUpdate.getDescription());
                         return materialRepository.save(material);
                     }else{
                         throw new RuntimeException("Material not found ");

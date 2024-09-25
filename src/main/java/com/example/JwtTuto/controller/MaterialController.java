@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/userAPI/material")
+@CrossOrigin(origins = "http://localhost:4200") // Allow requests from localhost:4200
 public class MaterialController {
 
     private MaterialService materialService;
 
     //TODO: Implement the methods for the MaterialController class
+
 
     @GetMapping("/all")
     ResponseEntity<Object> getAllMaterials() {

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity(name = "material")
 public class Material {
@@ -20,4 +22,11 @@ public class Material {
     @JoinColumn(name = "compartment_id", referencedColumnName = "id")
     @JsonBackReference
     private Compartment compartment;
+
+    public int getCompartmentId() {
+        return compartment != null ? compartment.getId() : 0;
+    }
+    public String getCompartmentName() {
+        return compartment != null ? compartment.getName() : "";
+    }
 }
